@@ -1,0 +1,31 @@
+{% extends 'club/base.html' %}
+{% block title %}Dar de Baja — Hell's Angels MC{% endblock %}
+
+{% block content %}
+<div style="padding:40px 20px;">
+  <div class="confirm-box" style="margin:60px auto;">
+    <span class="confirm-icon">⚠️</span>
+    <h2 class="confirm-titulo">Dar de Baja</h2>
+    <p class="confirm-texto">
+      ¿Estás seguro de que deseas eliminar permanentemente al hermano:
+    </p>
+    <p>
+      <span class="confirm-nombre">{{ motociclista.nombre_completo }}</span>
+      {% if motociclista.apodo %}
+      <span style="color:var(--dorado); font-family:var(--fuente-subtitulo); font-style:italic;">"{{ motociclista.apodo }}"</span>
+      {% endif %}
+    </p>
+    <p class="confirm-texto" style="margin-top:15px; font-size:0.85rem;">
+      Esta acción no se puede deshacer. Todos sus datos serán eliminados del sistema.
+    </p>
+
+    <div style="display:flex; gap:15px; justify-content:center; margin-top:30px;">
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-peligro">☠ Confirmar Baja</button>
+      </form>
+      <a href="{% url 'lista_motociclistas' %}" class="btn btn-gris">Cancelar</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,468 @@
+{% extends 'club/base.html' %}
+{% block title %}{{ titulo }} — Hell's Angels MC{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1 class="page-header-title">☠ {{ titulo }}</h1>
+    <p class="page-header-sub">
+      {% if motociclista %}Editando a {{ motociclista.nombre_completo }}{% else %}Formulario de Inscripción al Club{% endif %}
+    </p>
+  </div>
+  <a href="{% url 'lista_motociclistas' %}" class="btn btn-gris">← Volver</a>
+</div>
+
+<div class="form-container">
+
+  {% if form.errors %}
+  <div class="form-errores">
+    <strong>☠ Corrige los siguientes errores:</strong>
+    <ul style="margin-top:8px; padding-left:20px;">
+      {% for field in form %}
+        {% for error in field.errors %}
+          <li>{{ field.label }}: {{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="form-card">
+    {% csrf_token %}
+
+    <!-- SECCIÓN 1: DATOS PERSONALES -->
+    <div class="form-section">
+      <div class="form-section-title">👤 Datos Personales</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }} *</label>
+          {{ form.nombre }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.apellido_paterno.id_for_label }}">{{ form.apellido_paterno.label }} *</label>
+          {{ form.apellido_paterno }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.apellido_materno.id_for_label }}">{{ form.apellido_materno.label }}</label>
+          {{ form.apellido_materno }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.apodo.id_for_label }}">{{ form.apodo.label }}</label>
+          {{ form.apodo }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.fecha_nacimiento.id_for_label }}">{{ form.fecha_nacimiento.label }} *</label>
+          {{ form.fecha_nacimiento }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.tipo_sangre.id_for_label }}">{{ form.tipo_sangre.label }} *</label>
+          {{ form.tipo_sangre }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.curp.id_for_label }}">{{ form.curp.label }}</label>
+          {{ form.curp }}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2: CONTACTO -->
+    <div class="form-section">
+      <div class="form-section-title">📞 Información de Contacto</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="{{ form.email.id_for_label }}">{{ form.email.label }} *</label>
+          {{ form.email }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.telefono.id_for_label }}">{{ form.telefono.label }} *</label>
+          {{ form.telefono }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.ciudad.id_for_label }}">{{ form.ciudad.label }} *</label>
+          {{ form.ciudad }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.estado_republica.id_for_label }}">{{ form.estado_republica.label }} *</label>
+          {{ form.estado_republica }}
+        </div>
+        <div class="form-group full-width">
+          <label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }}</label>
+          {{ form.direccion }}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3: MOTOCICLETA -->
+    <div class="form-section">
+      <div class="form-section-title">🏍️ Tu Motocicleta</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="{{ form.marca_moto.id_for_label }}">{{ form.marca_moto.label }} *</label>
+          {{ form.marca_moto }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.modelo_moto.id_for_label }}">{{ form.modelo_moto.label }} *</label>
+          {{ form.modelo_moto }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.año_moto.id_for_label }}">{{ form.año_moto.label }} *</label>
+          {{ form.año_moto }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.cilindrada.id_for_label }}">{{ form.cilindrada.label }} *</label>
+          {{ form.cilindrada }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.color_moto.id_for_label }}">{{ form.color_moto.label }}</label>
+          {{ form.color_moto }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.placa.id_for_label }}">{{ form.placa.label }}</label>
+          {{ form.placa }}
+        </div>
+      </div>
+
+      <!-- Vehículo extra -->
+      <div class="form-subsection-title">🚗 Moto o Vehículo (Adicional)</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="{{ form.vehiculo_modelo.id_for_label }}">{{ form.vehiculo_modelo.label }}</label>
+          {{ form.vehiculo_modelo }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.vehiculo_placa.id_for_label }}">{{ form.vehiculo_placa.label }}</label>
+          {{ form.vehiculo_placa }}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 4: EXPERIENCIA -->
+    <div class="form-section">
+      <div class="form-section-title">⚙️ Experiencia y Licencia</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="{{ form.años_experiencia.id_for_label }}">{{ form.años_experiencia.label }} *</label>
+          {{ form.años_experiencia }}
+        </div>
+        <div class="form-group" style="justify-content:flex-end; padding-top:20px;">
+          <div class="form-check">
+            {{ form.tiene_licencia }}
+            <label class="form-check-label" for="{{ form.tiene_licencia.id_for_label }}">
+              {{ form.tiene_licencia.label }}
+            </label>
+          </div>
+        </div>
+        <div class="form-group" id="grupo-licencia">
+          <label for="{{ form.numero_licencia.id_for_label }}">{{ form.numero_licencia.label }}</label>
+          {{ form.numero_licencia }}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 5: EMERGENCIA -->
+    <div class="form-section">
+      <div class="form-section-title">🚨 Contacto de Emergencia</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="{{ form.contacto_emergencia_nombre.id_for_label }}">{{ form.contacto_emergencia_nombre.label }} *</label>
+          {{ form.contacto_emergencia_nombre }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.contacto_emergencia_telefono.id_for_label }}">{{ form.contacto_emergencia_telefono.label }} *</label>
+          {{ form.contacto_emergencia_telefono }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.contacto_emergencia_parentesco.id_for_label }}">{{ form.contacto_emergencia_parentesco.label }} *</label>
+          {{ form.contacto_emergencia_parentesco }}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 6: REGISTRO DE SALUD -->
+    <div class="form-section">
+      <div class="form-section-title">🏥 Registro de Salud</div>
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="{{ form.grupo_sanguineo.id_for_label }}">{{ form.grupo_sanguineo.label }} *</label>
+          {{ form.grupo_sanguineo }}
+        </div>
+      </div>
+
+      <!-- Pregunta: Alérgico -->
+      <div class="salud-pregunta">
+        <div class="salud-pregunta-row">
+          <label for="{{ form.es_alergico.id_for_label }}">{{ form.es_alergico.label }} *</label>
+          {{ form.es_alergico }}
+        </div>
+        <div class="salud-especifique">
+          <label for="{{ form.alergico_especifique.id_for_label }}">Especifique:</label>
+          {{ form.alergico_especifique }}
+        </div>
+      </div>
+
+      <!-- Pregunta: Padecimiento físico -->
+      <div class="salud-pregunta">
+        <div class="salud-pregunta-row">
+          <label for="{{ form.padecimiento_fisico.id_for_label }}">{{ form.padecimiento_fisico.label }} *</label>
+          {{ form.padecimiento_fisico }}
+        </div>
+        <div class="salud-especifique">
+          <label for="{{ form.padecimiento_especifique.id_for_label }}">Especifique:</label>
+          {{ form.padecimiento_especifique }}
+        </div>
+      </div>
+
+      <!-- Pregunta: Tratamiento médico -->
+      <div class="salud-pregunta">
+        <div class="salud-pregunta-row">
+          <label for="{{ form.tratamiento_medico.id_for_label }}">{{ form.tratamiento_medico.label }} *</label>
+          {{ form.tratamiento_medico }}
+        </div>
+        <div class="salud-especifique">
+          <label for="{{ form.tratamiento_especifique.id_for_label }}">Especifique:</label>
+          {{ form.tratamiento_especifique }}
+        </div>
+      </div>
+
+      <!-- Pregunta: Medicamento -->
+      <div class="salud-pregunta">
+        <div class="salud-pregunta-row">
+          <label for="{{ form.toma_medicamento.id_for_label }}">{{ form.toma_medicamento.label }} *</label>
+          {{ form.toma_medicamento }}
+        </div>
+        <div class="salud-especifique">
+          <label for="{{ form.medicamento_especifique.id_for_label }}">Especifique:</label>
+          {{ form.medicamento_especifique }}
+        </div>
+      </div>
+
+      <!-- Forma de suministro -->
+      <div class="salud-pregunta">
+        <div class="salud-pregunta-row">
+          <label for="{{ form.forma_suministro.id_for_label }}">{{ form.forma_suministro.label }}:</label>
+          {{ form.forma_suministro }}
+        </div>
+      </div>
+
+      <!-- Pregunta: Seguro médico -->
+      <div class="salud-pregunta">
+        <div class="salud-pregunta-row">
+          <label for="{{ form.seguro_medico.id_for_label }}">{{ form.seguro_medico.label }} *</label>
+          {{ form.seguro_medico }}
+        </div>
+        <div class="salud-especifique">
+          <label for="{{ form.seguro_especifique.id_for_label }}">Especifique:</label>
+          {{ form.seguro_especifique }}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 7: DOCUMENTOS Y SOPORTES -->
+    <div class="form-section">
+      <div class="form-section-title">📎 Documentos y Soportes del Vehículo</div>
+      <div class="documentos-nota">
+        <span class="text-dorado">* Tarjeta de Propiedad</span> &bull;
+        <span class="text-dorado">* SOAT</span> &bull;
+        <span class="text-dorado">* Revisión Técnico-mecánica</span> &bull;
+        <span class="text-dorado">* Manifiesto de Importación</span>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="{{ form.documentos.id_for_label }}">{{ form.documentos.label }} *</label>
+          {{ form.documentos }}
+          <small class="form-help-text">Tipos de archivos: pdf, jpg, jpeg, png</small>
+        </div>
+        <div class="form-group">
+          <label for="{{ form.foto_identificacion.id_for_label }}">{{ form.foto_identificacion.label }} *</label>
+          {{ form.foto_identificacion }}
+          <small class="form-help-text">Tipos de archivos: pdf, jpg, jpeg, png</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 8: ASPECTO LEGAL -->
+    <div class="form-section">
+      <div class="form-section-title">⚖️ Aspecto Legal</div>
+
+      <!-- Liberación de Responsabilidad Social -->
+      <div class="legal-bloque">
+        <h4 class="legal-subtitulo">Liberación de Responsabilidad Social: <span class="text-rojo">*</span></h4>
+        <div class="legal-texto">
+          <p>Yo, _________________________ portador de la cédula de identidad número _________________________ declaro que conozco todos los riesgos que involucran las actividades deportivas a motor y que haré uso de correcto de las instalaciones autorizadas para la práctica deportiva bajo mi única responsabilidad. Así mismo declaro que exonero de toda responsabilidad Penal, Civil o Administrativa a la Alcaldía Municipal de Tesalia y a la empresa MASSEQ por hechos o accidentes ocurridos antes, durante y después de la práctica deportiva o recreativa que realice.</p>
+          <p>Por último, doy autorización para mi traslado a la clínica u hospital más cercano, en caso de presentarse algún accidente y autorizo a los médicos a atenderme debidamente.</p>
+        </div>
+        <div class="form-check legal-check">
+          {{ form.acepta_responsabilidad }}
+          <label class="form-check-label" for="{{ form.acepta_responsabilidad.id_for_label }}">
+            Acepto la Liberación de Responsabilidad Social.
+          </label>
+        </div>
+      </div>
+
+      <!-- Aceptación Tratamiento de Datos -->
+      <div class="legal-bloque">
+        <h4 class="legal-subtitulo">Aceptación Tratamiento de Datos: <span class="text-rojo">*</span></h4>
+        <div class="legal-texto">
+          <p>Yo, _________________________ portador de la cédula de identidad número _________________________ autorizo a "TESALIA MOTOCLUB", a que conserven en ficheros informáticos y/o en cualquier otro soporte físico los datos personales que le han sido proporcionados de forma voluntaria y a tratar esa información con el objeto que le han sido facilitados, es decir, para la administración y gestión. Asimismo, el firmante declara conocer y aceptar las normas generales de funcionamiento del Club de Motociclismo, de las actividades y aquellas genéricas de funcionamiento. Por su parte "TESALIA MOTOCLUB" informa al firmante que su información personal figura en sus oficinas, en las que podrá solicitar el contenido exacto de ella y en donde podrá ejercer los derechos de rectificación, anulación o modificación que pudiera corresponderle, así como a modificar esta autorización en cualquier sentido.</p>
+        </div>
+        <div class="form-check legal-check">
+          {{ form.acepta_privacidad }}
+          <label class="form-check-label" for="{{ form.acepta_privacidad.id_for_label }}">
+            Acepto la Política de Privacidad.
+          </label>
+        </div>
+      </div>
+
+      <!-- Permiso de Fotografías -->
+      <div class="legal-bloque">
+        <h4 class="legal-subtitulo">Permiso de Fotografías: <span class="text-rojo">*</span></h4>
+        <div class="legal-texto">
+          <p>Yo, _________________________ portador de la cédula de identidad número _________________________ declaro que autorizo a que "TESALIA MOTOCLUB", pueda realizar fotografías, durante las actividades, para su posible utilización en medios de comunicación, redes sociales, soportes informáticos o exhibición en otros medios del centro.</p>
+        </div>
+        <div class="form-check legal-check">
+          {{ form.acepta_permiso_fotos }}
+          <label class="form-check-label" for="{{ form.acepta_permiso_fotos.id_for_label }}">
+            Acepto el Permiso de Fotografías.
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 9: FIRMA -->
+    <div class="form-section">
+      <div class="form-section-title">✍️ Firma de Conformidad del Proceso de Inscripción</div>
+      <div class="firma-container">
+        <canvas id="firma-canvas" width="600" height="200"></canvas>
+        <div class="firma-controles">
+          <button type="button" id="firma-limpiar" class="btn btn-gris btn-sm">🗑️ Limpiar Firma</button>
+        </div>
+        {{ form.firma }}
+      </div>
+    </div>
+
+    <!-- SECCIÓN 10: ESTADO Y NOTAS -->
+    <div class="form-section">
+      <div class="form-section-title">📋 Estado en el Club</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="{{ form.estado.id_for_label }}">{{ form.estado.label }}</label>
+          {{ form.estado }}
+        </div>
+        <div class="form-group full-width">
+          <label for="{{ form.notas.id_for_label }}">{{ form.notas.label }}</label>
+          {{ form.notas }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="form-actions">
+      <a href="{% url 'lista_motociclistas' %}" class="btn btn-gris">Cancelar</a>
+      <button type="submit" class="btn btn-rojo">☠ {{ accion }}</button>
+    </div>
+
+  </form>
+</div>
+
+<!-- Script para el canvas de firma -->
+<script>
+(function() {
+  const canvas = document.getElementById('firma-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let dibujando = false;
+  let tieneFirma = false;
+
+  // Fondo del canvas
+  function limpiarCanvas() {
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Línea guía
+    ctx.strokeStyle = '#333333';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(30, canvas.height - 40);
+    ctx.lineTo(canvas.width - 30, canvas.height - 40);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    tieneFirma = false;
+    document.getElementById('firma-data').value = '';
+  }
+
+  limpiarCanvas();
+
+  // Configurar el trazo de firma
+  ctx.strokeStyle = '#cc0000';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    if (e.touches) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  }
+
+  function startDraw(e) {
+    e.preventDefault();
+    dibujando = true;
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  }
+
+  function draw(e) {
+    if (!dibujando) return;
+    e.preventDefault();
+    tieneFirma = true;
+    const pos = getPos(e);
+    ctx.strokeStyle = '#cc0000';
+    ctx.lineWidth = 2.5;
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+  }
+
+  function stopDraw() {
+    if (dibujando && tieneFirma) {
+      document.getElementById('firma-data').value = canvas.toDataURL('image/png');
+    }
+    dibujando = false;
+  }
+
+  // Mouse events
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDraw);
+  canvas.addEventListener('mouseleave', stopDraw);
+  // Touch events
+  canvas.addEventListener('touchstart', startDraw);
+  canvas.addEventListener('touchmove', draw);
+  canvas.addEventListener('touchend', stopDraw);
+
+  // Limpiar
+  document.getElementById('firma-limpiar').addEventListener('click', function() {
+    limpiarCanvas();
+    // Re-establecer estilo de trazo
+    ctx.strokeStyle = '#cc0000';
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  });
+})();
+</script>
+{% endblock %}

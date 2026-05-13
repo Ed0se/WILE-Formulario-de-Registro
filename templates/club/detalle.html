@@ -1,0 +1,181 @@
+{% extends 'club/base.html' %}
+{% block title %}{{ motociclista.nombre_completo }} — Hell's Angels MC{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1 class="page-header-title">☠ Perfil del Miembro</h1>
+    <p class="page-header-sub">Registrado el {{ motociclista.fecha_registro|date:"d/m/Y" }}</p>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <a href="{% url 'editar_motociclista' motociclista.pk %}" class="btn btn-dorado">Editar</a>
+    <a href="{% url 'eliminar_motociclista' motociclista.pk %}" class="btn btn-peligro">Dar de Baja</a>
+    <a href="{% url 'lista_motociclistas' %}" class="btn btn-gris">← Volver</a>
+  </div>
+</div>
+
+<div class="detalle-container">
+
+  <!-- HEADER DEL MIEMBRO -->
+  <div class="detalle-header">
+    <div class="detalle-skull">☠</div>
+    <div>
+      <div class="detalle-nombre">{{ motociclista.nombre_completo }}</div>
+      {% if motociclista.apodo %}
+      <div class="detalle-apodo">"{{ motociclista.apodo }}"</div>
+      {% endif %}
+      <div style="margin-top:10px;">
+        <span class="badge-estado badge-{{ motociclista.estado }}">{{ motociclista.get_estado_display }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="detalle-grid">
+
+    <!-- DATOS PERSONALES -->
+    <div class="detalle-card">
+      <div class="detalle-card-header">👤 Datos Personales</div>
+      <div class="detalle-card-body">
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Nombre completo</span>
+          <span class="detalle-campo-valor">{{ motociclista.nombre_completo }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Apodo</span>
+          <span class="detalle-campo-valor" style="color:var(--dorado);">{{ motociclista.apodo|default:"—" }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Fecha de nac.</span>
+          <span class="detalle-campo-valor">{{ motociclista.fecha_nacimiento|date:"d/m/Y" }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Tipo de sangre</span>
+          <span class="detalle-campo-valor" style="color:var(--rojo); font-weight:bold;">{{ motociclista.tipo_sangre }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">CURP</span>
+          <span class="detalle-campo-valor">{{ motociclista.curp|default:"—" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACTO -->
+    <div class="detalle-card">
+      <div class="detalle-card-header">📞 Contacto</div>
+      <div class="detalle-card-body">
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Email</span>
+          <span class="detalle-campo-valor">{{ motociclista.email }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Teléfono</span>
+          <span class="detalle-campo-valor">{{ motociclista.telefono }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Ciudad</span>
+          <span class="detalle-campo-valor">{{ motociclista.ciudad }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Estado</span>
+          <span class="detalle-campo-valor">{{ motociclista.estado_republica }}</span>
+        </div>
+        {% if motociclista.direccion %}
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Dirección</span>
+          <span class="detalle-campo-valor">{{ motociclista.direccion }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- MOTOCICLETA -->
+    <div class="detalle-card">
+      <div class="detalle-card-header">🏍️ Motocicleta</div>
+      <div class="detalle-card-body">
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Marca</span>
+          <span class="detalle-campo-valor">{{ motociclista.marca_moto }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Modelo</span>
+          <span class="detalle-campo-valor">{{ motociclista.modelo_moto }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Año</span>
+          <span class="detalle-campo-valor">{{ motociclista.año_moto }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Cilindrada</span>
+          <span class="detalle-campo-valor">{{ motociclista.cilindrada }} cc</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Color</span>
+          <span class="detalle-campo-valor">{{ motociclista.color_moto }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Placas</span>
+          <span class="detalle-campo-valor">{{ motociclista.placa|default:"—" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPERIENCIA -->
+    <div class="detalle-card">
+      <div class="detalle-card-header">⚙️ Experiencia</div>
+      <div class="detalle-card-body">
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Experiencia</span>
+          <span class="detalle-campo-valor">{{ motociclista.get_años_experiencia_display }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Licencia</span>
+          <span class="detalle-campo-valor">
+            {% if motociclista.tiene_licencia %}
+              <span style="color:#00cc44;">✓ Sí</span>
+            {% else %}
+              <span style="color:var(--rojo);">✗ No</span>
+            {% endif %}
+          </span>
+        </div>
+        {% if motociclista.numero_licencia %}
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Núm. Licencia</span>
+          <span class="detalle-campo-valor">{{ motociclista.numero_licencia }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- EMERGENCIA -->
+    <div class="detalle-card">
+      <div class="detalle-card-header">🚨 Contacto de Emergencia</div>
+      <div class="detalle-card-body">
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Nombre</span>
+          <span class="detalle-campo-valor">{{ motociclista.contacto_emergencia_nombre }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Teléfono</span>
+          <span class="detalle-campo-valor">{{ motociclista.contacto_emergencia_telefono }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-campo-label">Parentesco</span>
+          <span class="detalle-campo-valor">{{ motociclista.contacto_emergencia_parentesco }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTAS -->
+    {% if motociclista.notas %}
+    <div class="detalle-card">
+      <div class="detalle-card-header">📋 Notas</div>
+      <div class="detalle-card-body">
+        <p style="color:var(--gris-texto); font-size:0.9rem; line-height:1.7;">{{ motociclista.notas }}</p>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
